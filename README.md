@@ -108,6 +108,7 @@ Your output will be graded based on the following rubric:
 - [Python Pandas Tutorial (Part 1): Getting Started with Data Analysis - Installation and Loading Data](https://www.youtube.com/watch?v=ZyhVh-qRZPA&list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU&index=129)
 - [Matplotlib Tutorial (Part 1): Creating and Customizing Our First Plots](https://www.youtube.com/watch?v=UO98lJQ3QGI&list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU&index=113)
 - [Scikit-learn Crash Course - Machine Learning Library for Python](https://www.youtube.com/watch?v=0B5eIE_1vpU)
+- [Scikit-Laern Tutorials - Master Machine Learning](https://www.youtube.com/watch?v=SjOfbbfI2qY&list=PLcQVY5V2UY4LNmObS0gqNVyNdVfXnHwu8)
 - [Linear Regression, Clearly Explained!!!](https://www.youtube.com/watch?v=7ArmBVF2dCs)
 
 **Official Docs/Tutorials**
