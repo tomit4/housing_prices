@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 """
 Housing Prices Dataset
@@ -22,6 +23,7 @@ here for a linear regression project to predict house prices based on area.
 
 
 def load_data(csv_file):
+    """Load housing data from a CSV file and return features X and target y."""
     try:
         df = pd.read_csv(csv_file)
         if "area" not in df.columns or "price" not in df.columns:
@@ -54,6 +56,7 @@ def load_data(csv_file):
 
 
 def explore_data(data):
+    """Display summary statistics and plot a scatter of area vs price."""
     X, y = data
 
     area = X["area"]
@@ -71,6 +74,8 @@ def explore_data(data):
         "Variance": lambda s: s.var(),
     }
 
+    # A simple helper function to print out
+    # standard statistics in a readable format
     def print_stats(name, series):
         print(f"--- {name} ---")
         for stat_name, func in stats.items():
@@ -84,11 +89,12 @@ def explore_data(data):
     print_stats("Area", area)
     print_stats("Price", price)
 
+    # Presents a matplotlib scatterplot relating house price to area
     plt.figure(figsize=(8, 6))
     plt.scatter(X, y, color="blue", alpha=0.6, label="Actual data")
 
     plt.xlabel("Area (sqft)")
-    plt.ylabel("Price ($ millions)")
+    plt.ylabel("Price ($)")
     plt.title("House Price vs Area")
     plt.grid(True)
     plt.legend()
@@ -99,16 +105,23 @@ def explore_data(data):
 
 
 def train_model(data):
+    """
+    Train a linear regression model on scaled area data.
+    Returns the trained model and the scaler.
+    """
     X, y = data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
     model = LinearRegression()
+    model.fit(X_train_scaled, y_train)
 
-    model.fit(X_train, y_train)
-
-    y_pred = model.predict(X_test)
+    y_pred = model.predict(X_test_scaled)
 
     r2 = r2_score(y_test, y_pred)
 
@@ -116,20 +129,23 @@ def train_model(data):
     print("Intercept: ", model.intercept_)
     print(f"R²: {r2:.4f}")
 
-    return model
+    return model, scaler
 
 
-def plot_data(data, model):
+def plot_data(data, model, scaler):
+    """Plot the scatter of actual data and regression line using the model."""
     X, y = data
 
     plt.figure(figsize=(8, 6))
     plt.scatter(X, y, color="blue", alpha=0.6, label="Actual data")
 
-    y_line = model.coef_[0] * X + model.intercept_
+    X_scaled = scaler.transform(X)
+    y_line = model.predict(X_scaled)
+
     plt.plot(X, y_line, color="red", linewidth=2, label="Regression line")
 
     plt.xlabel("Area (sqft)")
-    plt.ylabel("Price ($ millions)")
+    plt.ylabel("Price ($)")
     plt.title("House Price vs Area with Regression Line")
     plt.grid(True)
     plt.legend()
@@ -139,14 +155,16 @@ def plot_data(data, model):
     plt.close()
 
 
-def predict_price(model):
+def predict_price(model, scaler):
+    """Prompt user for house size, scale it, predict price, and display it."""
     while True:
         try:
-            X_test = int(input("Please enter a house size (in square feet): "))
-            if X_test < 0:
+            X_input = int(input("Please enter a house size (in square feet): "))
+            if X_input < 0:
                 raise ValueError("Input wasn't a positive number")
-            X_test_df = pd.DataFrame([[X_test]], columns=["area"])
-            y_pred = model.predict(X_test_df)
+
+            X_scaled = scaler.transform([[X_input]])
+            y_pred = model.predict(X_scaled)
             estimated_price = y_pred.item()
             print(f"Estimated house price: ${estimated_price:,.2f}")
             again = (
@@ -162,12 +180,13 @@ def predict_price(model):
 
 
 def main():
+    """Orchestrate loading, exploration, training, plotting, and prediction."""
     data = load_data("./housing.csv")
     if data is not None:
         explore_data(data)
-        model = train_model(data)
-        plot_data(data, model)
-        predict_price(model)
+        model, scaler = train_model(data)
+        plot_data(data, model, scaler)
+        predict_price(model, scaler)
 
 
 if __name__ == "__main__":
