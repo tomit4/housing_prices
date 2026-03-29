@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository hold's my code for [Study.com](https://study.com)'s Programming
+This repository holds my code for [Study.com](https://study.com)'s Programming
 In Python course's Assignment: Using Machine Learning. The program predicts
 housing prices based solely on house size (area in square feet) using a simple
 linear regression model built with Python.
@@ -74,3 +74,14 @@ Functions include:
 The program uses try-except blocks to handle file errors and invalid user inputs
 gracefully and is commented minimally but clearly following Pythonic
 conventions.
+
+### References
+
+The following article(s) were used as references for this project:
+
+- [Sklearn Linear Regression: A Complete Guide with Examples](https://www.datacamp.com/tutorial/sklearn-linear-regression)
+
+### Resources
+
+The dataset for this project can be found
+[here on kaggle](https://www.kaggle.com/code/yasserh/housing-price-prediction-best-ml-algorithms).
